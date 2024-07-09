@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📝 회원 가입</title>
+</head>
+<body>
+<div>
+    <form id="postForm">
+        <label for="name">이름 : </label>
+        <input
+                type="text"
+                id="name"
+                name="name"
+                rows="1"
+                cols="30"
+                placeholder="이름을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="email">이메일 : </label>
+        <input
+                type="text"
+                id="email"
+                name="email"
+                rows="1"
+                cols="30"
+                placeholder="이메일을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="password">비밀번호 : </label>
+        <input
+                type="text"
+                id="password"
+                name="password"
+                rows="1"
+                cols="30"
+                placeholder="비밀번호를 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <div class="form-group">
+            <label for="image"><br />프로필 사진 업로드 <br /></label>
+            <input
+                    class="form-control"
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+            />
+        </div>
+        <input type="submit" value="제출">
+    </form>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document
+      .getElementById("postForm")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+        // input 에서 id 값이 있어야 선언해서 할당 됨.
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const inputImage = document.getElementById("image"); // file은 배열형태로 get 되기 때문에 .value 지워줌 !
+        const image = inputImage.files[0]; // 배열 형태로 get 이니까 .files[0]
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("image", image);
+        try {
+          const response = await axios.post("http://localhost:8080/hello/axios-form-file-view", formData, {headers : {'Content-Type' : 'multipart/form-data'}});
+          console.log(response.data);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+</script>
+</body>
+</html>
