@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📝 회원 가입</title>
+</head>
+<body>
+<div>
+    <form id="postForm">
+        <label for="name">이름 : </label>
+        <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="이름을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="email">이메일 : </label>
+        <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="이메일을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="password">비밀번호 : </label>
+        <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="비밀번호를 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <div class="form-group">
+            <label for="image"><br />프로필 사진 업로드 <br /></label>
+            <input
+                    class="form-control"
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                    multiple
+            />
+        </div>
+        <input type="submit" value="제출">
+    </form>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document
+      .getElementById("postForm")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+        // input 에서 id 값이 있어야 선언해서 할당 됨.
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const hello = {name: name, email: email, password: password};
+        const helloJson = JSON.stringify(hello);
+
+        const inputImage = document.getElementById("image");
+        const images = inputImage.files; // image 를 multi 로 설정했으니까 s 붙여서 모두 수정.
+
+        const formData = new FormData();
+<!--        formData.append("hello", helloJson);-->
+<!--        // blob 함수는 데이터형을 지정/변환할 때 사용.-->
+        formData.append("hello", new Blob([helloJson], {type: "application/json"}));
+        // 여러 개니까 for문 돌려주기.
+        for(let i = 0; i < images.length; i++){
+            formData.append("images", images[i]);
+        }
+        <!--formData.append("image", image);   -->
+        try {
+          const response = await axios.post("http://localhost:8080/hello/axios-json-multi-file-view", formData, {headers : {'Content-Type' : 'multipart/form-data'}});
+          console.log(response.data);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+</script>
+</body>
+</html>

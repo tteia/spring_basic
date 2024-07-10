@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📝 회원 가입</title>
+</head>
+<body>
+<div>
+    <form id="postForm">
+        <label for="name">이름 : </label>
+        <input
+                type="text"
+                id="name"
+                name="name"
+                rows="1"
+                cols="30"
+                placeholder="이름을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="email">이메일 : </label>
+        <input
+                type="text"
+                id="email"
+                name="email"
+                rows="1"
+                cols="30"
+                placeholder="이메일을 작성해주세요."
+        />
+        <br/>
+        <br/>
+        <label for="password">비밀번호 : </label>
+        <input
+                type="text"
+                id="password"
+                name="password"
+                rows="1"
+                cols="30"
+                placeholder="비밀번호를 작성해주세요."
+        />
+        <input type="submit" value="제출">
+    </form>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    document
+      .getElementById("postForm")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+        // input 에서 id 값이 있어야 선언해서 할당 됨.
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await axios.post("http://localhost:8080/hello/axios-json-view",
+          {name:name, email:email, password:password});
+          console.log(response.data);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+</script>
+</body>
+</html>

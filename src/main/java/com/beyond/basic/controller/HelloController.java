@@ -1,12 +1,15 @@
 package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.Hello;
+import com.beyond.basic.domain.Student;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 // 1. 이건 컨트롤러야! 표시해주기.
 @Controller
@@ -15,18 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 // 해당 클래스가 컨트롤러(사용자의 요청을 처리하고 응답하는 편의기능)임을 명시.
 public class HelloController {
 
+    // 백엔드 데이터 전송 방식들
 //     case1. 사용자가 서버에게 화면 요청
 //     case2. @ResponseBody 가 붙을 경우 단순 String 데이터 return(get 요청)
 
     // 2. GetMapping 기능 사용하겠다 선언.
     // GetMapping 을 통해 get 요청을 처리하고 url 패턴을 명시.
     @GetMapping("/")
-    // 3. ResponseBody 선언.
-    // ResponseBody 를 사용하면 화면이 아닌 데이터를 return 해준다.
-    // 만약 ResponseBody 가 없다면 ?
-    // 스프링은 templates 폴더 밑에 helloWorld.html 화면을 찾아 return 해준다.
-    // >> 약속된 패턴 ! 화면을 리턴하려면 ResponseBody 를 써 줄 필요가 없다.
-    // 그러려면 templates 아래 html 파일이 존재해야 함. 없으면 에러!
+//     3. ResponseBody 선언.
+//     ResponseBody 를 사용하면 화면이 아닌 데이터를 return 해준다.
+//     만약 ResponseBody 가 없다면 ?
+//     스프링은 templates 폴더 밑에 helloWorld.html 화면을 찾아 return 해준다.
+//     >> 약속된 패턴 ! 화면을 리턴하려면 ResponseBody 를 써 줄 필요가 없다.
+//     그러려면 templates 아래 html 파일이 존재해야 함. 없으면 에러!
 //    @ResponseBody
 
     public String helloWorld(){
@@ -38,7 +42,6 @@ public class HelloController {
     // data 를 return 하되, json 형식으로 return.
     // method 명은 helloJson, url 패턴은 /hello/json
     @GetMapping("/json")
-//    @RequestMapping // 메서드 차원에서도 RequestMappong 사용 가능
     @ResponseBody
     // ResponseBody 를 사용하면서 객체를 return 시 자동으로 직렬화.
     public Hello helloJson() throws JsonProcessingException {
@@ -209,6 +212,80 @@ public class HelloController {
 
 
     //case5. js를 활용한 json 데이터 전송
+    // url 패턴 : axios-json-view , 화면명, get 요청 메서드 : axios-json-view
+    // post 요청 메서드 : axiosJsonPost
+    @GetMapping("axios-json-view")
+    public String axiosJsonView(){
+        return "axios-json-view";
+    }
+
+    @PostMapping("axios-json-view")
+    @ResponseBody
+    // axiosJsonPost 에 객체를 넣거나 model 을 사용하는 경우는 parameter 방식.
+    // json 으로 전송한 데이터를 받을 때에는 @RequestBody 어노테이션 사용
+    // ⭐️json 으로 들어오니까 json 파싱해 ~ => RequestBody⭐️
+    public Hello axiosJsonPost(@RequestBody Hello hello){
+        return hello;
+    }
+
     //case6. js를 활용한 json 데이터 전송(+file)
+    // url 패턴 : "axios-json-file-view"
+    @GetMapping("/axios-json-file-view")
+    public String axiosJsoFileView(){
+        return "axios-json-file-view";
+    }
+
+    @PostMapping("axios-json-file-view")
+    @ResponseBody
+    // RequestPart 는 file 과 Json 을 처리할 때 주로 사용하는 어노테이션.
+    public String axiosJsonFilePost(
+                                    //@RequestParam("hello") String hello,
+                                    //@RequestParam("image") MultipartFile file
+                                    //formData를 통해 json, file(멀티 미디어-이미지, 영상 등) 을 처리할 때 RequestPart 어노테이션을 활용한다.
+                                    @RequestPart("hello") Hello hello,
+                                    @RequestPart("image") MultipartFile file
+                                    ) throws JsonProcessingException { // form 형식은 RequestParam !!⭐️
+        System.out.println(hello);
+//        // String 으로 받은 뒤 수동으로 객체로 변환.
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        Hello hello1 = objectMapper.readValue(hello, Hello.class);
+//        System.out.println(hello1.getName());
+        System.out.println(file.getOriginalFilename());
+        return "ok";
+    }
+
     //case7. js를 활용한 json 데이터 전송(+여러 file)
+
+    @GetMapping("/axios-json-multi-file-view")
+    public String axiosJsoMultiFileView(){
+        return "axios-json-multi-file-view";
+    }
+
+    @PostMapping("axios-json-multi-file-view")
+    @ResponseBody
+    public String axiosJsonMultiFilePost(@RequestPart("hello") Hello hello,
+                                         @RequestPart("images") List<MultipartFile> images) {
+        System.out.println(hello);
+        for(MultipartFile file : images){
+            System.out.println(file.getOriginalFilename());
+        }
+        return "ok";
+    }
+
+    // case8. 중첩된 JSON 데이터 처리
+    // {name:'tteia', email:'test@test.com', scores:[{math:60}, {music:70}, {english:80}}
+    @GetMapping("/axios-nested-json-view")
+    public String axiosNestedJsonView(){
+        return "axios-nested-json-view";
+    }
+
+    @PostMapping("axios-nested-json-view")
+    @ResponseBody
+    // 현재 데이터 구조 : {name:"tteia",email:"test@test.com", grades:[className:xxx, point:yyy]}
+    public String axiosNestedJsonPost(@RequestBody Student student){
+        System.out.println(student);
+        return "ok";
+    }
+
+
 }
