@@ -25,9 +25,10 @@ public class MemberMemoryRepository implements MemberRepository{
     }
 
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
         // a. 메모리에 저장할게 ! (현재 우리는 db 가 없으니까.)
         memberList.add(member);
+        return member;
     }
 
     @Override

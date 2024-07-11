@@ -231,7 +231,7 @@ public class HelloController {
     //case6. js를 활용한 json 데이터 전송(+file)
     // url 패턴 : "axios-json-file-view"
     @GetMapping("/axios-json-file-view")
-    public String axiosJsoFileView(){
+    public String axiosJsonFileView(){
         return "axios-json-file-view";
     }
 

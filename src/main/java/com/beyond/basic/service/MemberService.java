@@ -4,6 +4,7 @@ import com.beyond.basic.controller.MemberController;
 import com.beyond.basic.domain.Member;
 import com.beyond.basic.domain.MemberReqDto;
 import com.beyond.basic.domain.MemberResDto;
+import com.beyond.basic.repository.MemberJdbcRepository;
 import com.beyond.basic.repository.MemberMemoryRepository;
 import com.beyond.basic.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class MemberService {
 
     // 5. Autowired : <싱글톤 객체를 주입(DI) 받는다> 라는 것을 의미함.
     @Autowired
-    public MemberService(MemberMemoryRepository memoryRepository){
+    public MemberService(MemberJdbcRepository memoryRepository){
         // 생성자가 호출될 때 할래! -> 상단에 선언되어있던 걸 가져오기
         // 이름이 충돌날 경우가 없기 때문에 this 는 생략 가능.
          this.memberRepository = memoryRepository;
