@@ -1,23 +1,27 @@
 package com.beyond.basic.service;
 
-import com.beyond.basic.controller.MemberController;
 import com.beyond.basic.domain.Member;
+import com.beyond.basic.domain.MemberDetailDto;
 import com.beyond.basic.domain.MemberReqDto;
 import com.beyond.basic.domain.MemberResDto;
-import com.beyond.basic.repository.MemberJdbcRepository;
-import com.beyond.basic.repository.MemberMemoryRepository;
-import com.beyond.basic.repository.MemberRepository;
+import com.beyond.basic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // 실질적인 로직을 담당하는 Service.
 // input 값의 검증 및 실질적 비지니스 로직은 Service 계층에서 수행.
 
 // 서비스 어노테이션 : 서비스 계층임을 표현함과 동시에 싱글톤 객체로 생성.
 @Service
+// Transactional 어노테이션을 통해 모든 메서드에 트랜잭션을 적용하고,
+// 만약 예외가 발생 시 롤백처리 자동화.
+@Transactional
 public class MemberService {
     // 1. 메서드마다 선언해주니까 (중복) 아예 최상단에 선언 !
     // 2. 생성자가 호출될 때마다 new 객체 => 생성자에 선언.
@@ -26,11 +30,11 @@ public class MemberService {
 
     // 두 번 할당되지 않도록 final.
     // 다른 클래스에서 적용되지 않도록 private.
-    private final MemberRepository memberRepository;
+    private final MyMemberRepository memberRepository;
 
     // 5. Autowired : <싱글톤 객체를 주입(DI) 받는다> 라는 것을 의미함.
     @Autowired
-    public MemberService(MemberJdbcRepository memoryRepository){
+    public MemberService(MyMemberRepository memoryRepository){
         // 생성자가 호출될 때 할래! -> 상단에 선언되어있던 걸 가져오기
         // 이름이 충돌날 경우가 없기 때문에 this 는 생략 가능.
          this.memberRepository = memoryRepository;
@@ -54,8 +58,20 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Member memberDetail(Long id){
-        return memberRepository.findById(id);
+    public MemberDetailDto memberDetail(Long id){
+        Optional<Member> optMember = memberRepository.findById(id); // 인터페이스인데, 구현체가 없는데! findById 를 어케 썻나요? -> 어딘가에 숨어있다가 런타임 시점에 주입이 됨..
+        MemberDetailDto dto = new MemberDetailDto();
+        Member member = optMember.orElseThrow(()->new EntityNotFoundException("없는 회원입니다.")); // 있으면 꺼내고 없으면 예외 터짐.
+        // 왜 없으면 예외를 터트리게 하는 걸까? 주요 목적 두 가지 => 트랜잭션 롤백하게 하 려 고 ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
+        // 또, 클라이언트한테 적절한 예외 메세지(상태 값이나 코드)를 전 해 주 려 고 ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
+        // 이렇게 되려면 트랜잭셔널 어노테이션이 붙어 있어야 한다.
+
+        dto.setId(findMember.getId());
+        dto.setName(findMember.getName());
+        dto.setEmail(findMember.getEmail());
+        dto.setPassword(findMember.getPassword());
+
+        return dto;
     }
 
     public List<MemberResDto> memberList(){
@@ -64,6 +80,7 @@ public class MemberService {
         List<Member> memberList = memberRepository.findAll();
         for (Member member : memberList) {
             MemberResDto dto = new MemberResDto();
+            dto.setId(member.getId());
             dto.setName(member.getName());
             dto.setEmail(member.getEmail());
             memberResDtos.add(dto);

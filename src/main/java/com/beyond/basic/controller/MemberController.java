@@ -1,5 +1,6 @@
 package com.beyond.basic.controller;
 
+import com.beyond.basic.domain.MemberDetailDto;
 import com.beyond.basic.domain.MemberReqDto;
 import com.beyond.basic.domain.MemberResDto;
 import com.beyond.basic.service.MemberService;
@@ -68,9 +69,11 @@ public class MemberController {
     // 회원 상세 조회
     // url(uri) : member/1, member/2
     // 화면명 : member-detail
-    @GetMapping("/member/member/{inputID}")
+    @GetMapping("/member/detail/{inputID}")
     // int 또는 long 으로 받을 경우 Spring 에서 형 변환 (String -> Long)
-    public String memberDetail(@PathVariable Long inputID){
+    public String memberDetail(@PathVariable Long inputID, Model model){
+        MemberDetailDto memberDetail = memberService.memberDetail(inputID);
+        model.addAttribute("memberDetail", memberDetail);
         return "member/member-detail";
     }
 
@@ -90,7 +93,7 @@ public class MemberController {
         try{
             memberService.memberCreate(dto);
             // 화면 리턴이 아닌 url 재호출
-            return "redirect:/member/list";
+            return "redirect:/member/detail";
         }
         catch(IllegalArgumentException e){ //MemberService -> memberCreate 에서 작성한 e
             //e.getMessage();

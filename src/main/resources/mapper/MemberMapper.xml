@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.beyond.basic.repository.MemberMybatisRepository">
+<!--  단일 객체면 멤버, 여러 개면 리스트로 반환함.  -->
+    <select id="findAll" resultType="com.beyond.basic.domain.Member">
+        SELECT * FROM member;
+    </select>
+    <select id="findById" resultType="com.beyond.basic.domain.Member" parameterType="Long">
+        SELECT * FROM member WHERE id =#{id};
+    </select>
+<!--  mybatis 에서 insert 는 기본적으로 리턴 타입을 제공하지 않는다.  -->
+<!--  그래서 <insert> 가 아닌 <select> 를 써준 것 !  -->
+    <select id="save" resultType="com.beyond.basic.domain.Member">
+        INSERT INTO member(name, email, password) VALUES(#{name}, #{email}, #{password});
+    </select>
+</mapper>
