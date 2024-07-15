@@ -1,41 +1,40 @@
-// java 빌드에 필요한 플러그인 설정
+//java빌드에 필요한 플러그인 설정
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.11'
-	// 의존성 관리 툴의 버전을 명시
+//	의존성관리툴의 버전을 명시
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'com.beyond'
-// build 된 jar 파일의 버전명 확정 (우리 프로젝트가 xx 버전이다 !)
-// snapshot : 실험용 버전.
+//빌드된 jar파일의 버전명, snapshot : 실험용버전
 version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '11'
 }
 
+
 repositories {
-	// gradle 로 생성했는데 왜 maven 이 있을까..?
-	// 의존성을 가져오는 대상 저장소(repository) 이름이 mavenCentral 인 것.
-	// 네트워크(인터넷)가 활성화 되어 있어야 끌어와서 사용할 수 있다.
-	// 내부망에서 인터넷을 사용하기 불가한 경우에는 nexus(설치형)와 같은 repository 를 사용하기도 함.
+//  의존성을 가져오는 대상 저장소(repository)
+//	내부망에서 인터넷을 사용하기 불가한 경우에는 nexus(설치형)와 같은 repository를 사용하기도함
 	mavenCentral()
 }
 
-// starter 종속성은 일반적으로 별도의 버전 관리가 필요없고, 버전에 따라 호환성을 맞춰줌. (boot-starter-data)
+//starter종속성은 일반적으로 별도의 버전관리가 필요없고, 버전에 따라 호환성을 맞춰줌.
 dependencies {
-	// DB 연결 및 관리를 위한 의존성 : jdbc , ibatis(mybatis) , jpa , springdatajpa (발전 순서)
+//	DB연결 및 관리를 위한 의존성 : jdbc, mybatis, jpa, springdatajpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	// mybatis 관련 의존성 추가
+//	mybatis관련 의존성 추가
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	mariadb클라이언트 추가
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	// implementation 키워드는 컴파일 시점과 런타임 시점에 모두 필요한 라이브러리임을 명시.
-	// thymeleaf(타임리프 - 템플릿 엔진) 의존성 : JSP, thymeleaf 등
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	타임리프(템플릿 엔진 - JSP, 타임리프 등) 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+//	implementation키워드는 컴파일시점과 런타임시점에 모두 필요한 라이브러리임을 명시
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// 컴파일 시점에서 필요한 라이브러리임을 명시
+//	컴파일 시점에서 필요한 라이브러리임을 명시
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

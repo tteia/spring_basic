@@ -1,38 +1,30 @@
-# .properties 는 계층 구조의 중복 발생 (ex. spring.application.name=basic    datasource.어찌구 = 어찌구    datasource.저찌구=저찌구)
-# .yml or .yaml 을 통해 들여쓰기 계층 구조 사용
-
-# port 번호 변경시
+#.properties 계층구조 중복 발생
+#yml, yaml을 통해 들여쓰기 계층구조 사용
+#port 번호 변경 (default 8080)
 #server:
-#  port: 8081    # 만약 안되면 port kill
+#port: 8081
 
-# default = 8080
-#server :
-#  port : 8081
-
-spring :
-  datasource :
-    driver-class-name : org.mariadb.jdbc.Driver
-    url : jdbc:mariadb://localhost:3306/basic
-    username : root
-    password : 0430aa
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/basic
+    username: root
+    password: 0430aa
   jpa:
     database: mysql
-    # innoDB 사용 설정
+#    innoDB사용 설정
     database-platform: org.hibernate.dialect.MariaDBDialect
-
-    # ddl 문(create, alter . . .)
-    # 테이블은 생성해주나, 스키마는 반드시 사전에 생성 필요.
+#    테이블은 생성해주나, 스키마는 반드시 사전에 생성필요.
     generate-ddl: true
-
-    # jpa 는 인터페이스, hibernate 는 구현체. (실질적 기능 구현. 사실상 같다 !)
+#    jpa는 인터페이스이고, hibernate구현체(실질적 기능 구현)
     hibernate:
-      # create 옵션은 매번 테이블을 드랍 후 재생성.
-      # update 옵션은 변경사항만 alter 를 적용하고 기존의 데이터 유지.
-      # 변경사항 중에 주로 추가사항만을 반영하고, 삭제나 수정사항은 반영 안되는 경우도 있음.
-      # validate 옵션은 실제 DB와의 차이만을 체크함.
+#      create옵션은 매번 table을 drop후 재생성
+#      update옵션은 변경사항만 alter를 적용하고 기존의 데이터 유지
+#      변경사항중에 주로 추가사항만을 반영하고, 삭제나 수정사항은 반영안되는경우도 있음.
+#      validate는 실제DB와의 차이만을 check
       ddl-auto: update
-    # show_sql 옵션은 콘솔창에 ddl, dml 과 같은 sql 문을 출력해서 보여주는 옵션.
+#      콘솔창에 ddl, dml문을 출력하여 보여주는 옵션
     show_sql: true
 
 mybatis:
-  mapper-locations: classpath:/mapper/**/*.xml7
+  mapper-locations: classpath:/mapper/**/*.xml

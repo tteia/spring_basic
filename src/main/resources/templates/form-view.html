@@ -2,44 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>📝 회원 가입</title>
+    <title>회원가입</title>
 </head>
 <body>
-<div>
-    <form action="/hello/form-post1" method="post" enctype="application/x-www-form-urlencoded">
-        <label for="name">이름 : </label>
-        <input
-                type="text"
-                id="name"
-                name="name"
-                rows="1"
-                cols="30"
-                placeholder="이름을 작성해주세요."
-        />
-        <br/>
-        <br/>
-        <label for="email">이메일 : </label>
-        <input
-                type="text"
-                id="email"
-                name="email"
-                rows="1"
-                cols="30"
-                placeholder="이메일을 작성해주세요."
-        />
-        <br/>
-        <br/>
-        <label for="password">비밀번호 : </label>
-        <input
-                type="text"
-                id="password"
-                name="password"
-                rows="1"
-                cols="30"
-                placeholder="비밀번호를 작성해주세요."
-        />
-        <input type="submit" value="제출">
-    </form>
-</div>
+<form action="/hello/form-post1" method="post" enctype="application/x-www-form-urlencoded">
+    이름 : <input type="text" name="name"> <br>
+    email : <input type="text" name="email"> <br>
+    password : <input type="text" name="password"> <br>
+    <input type="submit" value="제출">
+</form>
+
 </body>
 </html>

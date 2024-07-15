@@ -15,86 +15,73 @@
 //
 //@Repository
 //public class MemberJdbcRepository implements MemberRepository{
-//    // Datasource 는 DB 와 JDBC 에서 사용하는 DB 연결 드라이버 객체.
-//    // application.yml 에서 설정한 DB 정보가 자동으로 주입.
+////    Datasource는 DB와 JDBC에서 사용하는 DB연결 드라이버 객체
+////    application.yml에서 설정한 DB정보가 자동으로 주입
 //    @Autowired
 //    private DataSource dataSource;
-//
 //    @Override
 //    public Member save(Member member) {
-//        try{
+//        try {
 //            Connection connection = dataSource.getConnection();
 //            String sql = "insert into member(name, email, password) values(?, ?, ?)";
 //            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 //            preparedStatement.setString(1, member.getName());
 //            preparedStatement.setString(2, member.getEmail());
 //            preparedStatement.setString(3, member.getPassword());
-//            // 추가, 수정의 경우 executeUpdate. 조회의 경우 executeQuery.
-//            preparedStatement.executeUpdate();
-//        }
-//        catch (SQLException e){
+//            preparedStatement.executeUpdate(); //추가, 수정의 경우 executeUpdate. 조회의 경우 executeQuery
+//
+//        }catch (SQLException e){
 //            e.printStackTrace();
 //        }
 //        return null;
 //    }
-//
 //    @Override
 //    public List<Member> findAll() {
 //        List<Member> memberList = new ArrayList<>();
-//
-//        try {
+//        try{
 //            Connection connection = dataSource.getConnection();
-//            String sql = "SELECT * FROM member";
+//            String sql = "select * from member";
 //            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-//            ResultSet resultSet = preparedStatement.executeQuery(); // 쿼리를 날려주기.
-//            // return 값은 resultSet 객체 !
+//            ResultSet resultSet = preparedStatement.executeQuery();
 //
-//            while (resultSet.next()){ // 핵심 동작 원리는 cursor.
+//            while (resultSet.next()){ //curser
 //                Long id = resultSet.getLong("id");
 //                String name = resultSet.getString("name");
 //                String email = resultSet.getString("email");
-////                String password = resultSet.getString("password");
-//
-//                Member member = new Member();
-//                member.setId(id);
-//                member.setName(name);
-//                member.setEmail(email);
-////                member.setPassword(password);
+//                Member member = new Member(
+//                        resultSet.getString("id"),
+//                        resultSet.getString("name"),
+//                        resultSet.getString("email")
+//                    );
 //                memberList.add(member);
 //            }
-//        }
-//        catch (SQLException e){
+//        }catch (SQLException e){
 //            e.printStackTrace();
 //        }
-//
 //        return memberList;
 //    }
-//
 //    @Override
 //    public Optional<Member> findById(Long inputId) {
 //        Member member = new Member();
-//        try {
+//        try{
 //            Connection connection = dataSource.getConnection();
-//            String sql = "SELECT * FROM member WHERE id = ?";
+//            String sql = "select * from member where id = ?";
 //            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-//            preparedStatement.setLong(1,inputId);
+//            preparedStatement.setLong(1, inputId);
 //            ResultSet resultSet = preparedStatement.executeQuery();
-//
 //            resultSet.next();
 //            Long id = resultSet.getLong("id");
 //            String name = resultSet.getString("name");
 //            String email = resultSet.getString("email");
 //            String password = resultSet.getString("password");
-//
 //            member.setId(id);
 //            member.setName(name);
 //            member.setEmail(email);
 //            member.setPassword(password);
-//
-//        }
-//        catch (SQLException e){
+//        }catch (SQLException e){
 //            e.printStackTrace();
 //        }
+//
 //        return Optional.ofNullable(member);
 //    }
 //}
