@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -24,7 +25,13 @@ public class HelloController {
 //    responsebody를 사용하면 화면이 아닌 데이터를 return
 //    만약 여기서 responsebody가 없고 return이 스트링이면 스프링은
 //    templates폴더 밑에 helloworld.html화면을 찾아 리턴
-    public String helloWorld(){
+//    public String helloWorld(){
+//        return "helloworld";
+//    }
+    public String helloWorld(HttpServletRequest request){
+        // 아래와 같이 Controller 에서도 HttpServletRequest 를 주입 받아 사용 가능.
+//        System.out.println(request.getSession());
+//        System.out.println(request.getHeader("Cookie"));
         return "helloworld";
     }
     

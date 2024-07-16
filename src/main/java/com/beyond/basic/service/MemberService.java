@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service //서비스 계층임을 표현함과 동시에 싱글톤객체로 생성
 //Transactional어노테이션을 통해 모든 메서드에 트랜잭션을 적용하고,(각 메서드마다 하나의트랜잭션으로 묶는다는뜻)
 //만약 예외가 발생시 롤백처리 자동화
-@Transactional
+@Transactional(readOnly = true) // 모든 메서드가 readOnly => 조회용이라고 알림.
 public class MemberService {
 ////    다형성 설계
 //    private final MemberRepository memberRepository;
@@ -42,6 +42,13 @@ public class MemberService {
         }
         Member member = dto.toEntity();
         memberRepository.save(member);
+
+//        // Transactional 롤백 테스트
+//        // 상단에 @Transactional 선언이 되어 있기 때문에 트랜잭션으로 돌아가게 된다.
+//        if(dto.getName().equals("kin")){
+//            throw new IllegalArgumentException("잘못된 입력입니다.");// 예외 발생 시 위 save 가 롤백 됨.
+//        }
+
     }
     public MemberDetResDto memberDetail(Long id){
         Optional<Member> optMember = memberRepository.findById(id);
