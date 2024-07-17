@@ -2,6 +2,7 @@ package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.*;
 import com.beyond.basic.service.MemberService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController // RestController 의 경우 모든 메서드 상단에 @ResponseBody 가 붙는 효과 발생.
 @RequestMapping("/rest")
+@Api(tags = "회원 관리 서비스")
 public class MemberRestController {
 
     private final MemberService memberService;
@@ -54,7 +56,7 @@ public class MemberRestController {
             return result;
         }
         catch (EntityNotFoundException e){
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND.value(), "Failed");
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.NOT_FOUND.value(), e.getMessage());
             ResponseEntity<CommonErrorDto> result = new ResponseEntity<>(commonErrorDto, HttpStatus.NOT_FOUND);
             return result;
         }
@@ -80,7 +82,7 @@ public class MemberRestController {
             ResponseEntity<CommonResDto> result = new ResponseEntity<>(commonResDto, HttpStatus.OK);
             return result;
         }catch (IllegalArgumentException e){
-            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), "Failed");
+            CommonErrorDto commonErrorDto = new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()       );
             ResponseEntity<CommonErrorDto> result = new ResponseEntity<>(commonErrorDto, HttpStatus.BAD_REQUEST);
             return result;
         }

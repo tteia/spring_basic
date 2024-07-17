@@ -15,7 +15,7 @@ import java.util.List;
 //@AllArgsConstructor
 @NoArgsConstructor // 기본 생성자는 JPA 에서 필수.
 @Getter
-public class Member {
+public class Member extends BaseEntity {
     @Id //pk설정
 //    identity : auto_increment설정
 //    auto : jpa 자동으로 적절한 전략을 선택하도록 맡기는것.
@@ -32,15 +32,13 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> postList;
 
-
-
-    // 처음 생성될 때 (최초의) 시간.
-    @CreationTimestamp // DB 에는 current_timestamp 가 생성되지 않음. => DB 에는 insert 로 넣어줘야 됨. 무조건 JPA 를 지나야먄 DB에 들어갈 수 있게끔,,
-    private LocalDateTime createdTime; // camelCase 사용 시 DB 에는 _ (언더바)로 생성.
-
-    // 업데이트 되었을 때의 시간.
-    @UpdateTimestamp // 추가는 되는데 변경은 안 됨.
-    private LocalDateTime updateTime;
+//    // 처음 생성될 때 (최초의) 시간.
+//    @CreationTimestamp // DB 에는 current_timestamp 가 생성되지 않음. => DB 에는 insert 로 넣어줘야 됨. 무조건 JPA 를 지나야먄 DB에 들어갈 수 있게끔,,
+//    private LocalDateTime createdTime; // camelCase 사용 시 DB 에는 _ (언더바)로 생성.
+//
+//    // 업데이트 되었을 때의 시간.
+//    @UpdateTimestamp // 추가는 되는데 변경은 안 됨.
+//    private LocalDateTime updateTime;
 
     public Member(String name, String email, String password){
         this.name = name;

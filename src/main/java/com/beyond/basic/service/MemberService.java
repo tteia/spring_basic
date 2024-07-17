@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service //서비스 계층임을 표현함과 동시에 싱글톤객체로 생성
 //Transactional어노테이션을 통해 모든 메서드에 트랜잭션을 적용하고,(각 메서드마다 하나의트랜잭션으로 묶는다는뜻)
 //만약 예외가 발생시 롤백처리 자동화
-@Transactional(readOnly = true) // 모든 메서드가 readOnly => 조회용이라고 알림.
+//@Transactional(readOnly = true) // 모든 메서드가 readOnly => 조회용이라고 알림.
 public class MemberService {
 ////    다형성 설계
 //    private final MemberRepository memberRepository;
@@ -28,19 +28,23 @@ public class MemberService {
 //        this.memberRepository = memoryRepository;
 //    }
 
-//    비다형성 설계
+    //    비다형성 설계
     private final MyMemberRepository memberRepository;
+
     @Autowired //싱글톤객체를 주입(DI) 받는다라는 것을 의미
-    public MemberService(MyMemberRepository memoryRepository){
+    public MemberService(MyMemberRepository memoryRepository) {
         this.memberRepository = memoryRepository;
     }
 
 
-    public void memberCreate(MemberReqDto dto){
-        if(dto.getPassword().length() < 8){
+    public void memberCreate(MemberReqDto dto) {
+        if (dto.getPassword().length() < 8) {
             throw new IllegalArgumentException("비밀번호가 너무 짧습니다.");
         }
         Member member = dto.toEntity();
+        if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 Email 입니다.");
+        }
         memberRepository.save(member);
 
 //        // Transactional 롤백 테스트
@@ -50,15 +54,16 @@ public class MemberService {
 //        }
 
     }
-    public MemberDetResDto memberDetail(Long id){
+
+    public MemberDetResDto memberDetail(Long id) {
         Optional<Member> optMember = memberRepository.findById(id);
 //        클라이언트에게 적절한 예외메시지와 상태코드를 주는것이 주요목적
 //        또한, 예외를 강제 발생시킴으로서 적절한 롤백처리 하는것도 주요목적
-        Member member = optMember.orElseThrow(()->new EntityNotFoundException("없는 회원입니다."));
-        System.out.println("글쓴이의 글 쓴 개수 : " + member.getPostList().size());
-        for (Post p : member.getPostList()) {
-            System.out.println("글의 제목 : " + p.getTitle());
-        }
+        Member member = optMember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
+//        System.out.println("글쓴이의 글 쓴 개수 : " + member.getPostList().size());
+//        for (Post p : member.getPostList()) {
+//            System.out.println("글의 제목 : " + p.getTitle());
+//        }
         return member.detFromEntity();
     }
     public List<MemberResDto> memberList(){
